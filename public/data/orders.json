@@ -1,0 +1,6 @@
+[
+  { "id": 1, "customer_id": 1, "order_date": "2024-01-05", "status": "paid" },
+  { "id": 2, "customer_id": 2, "order_date": "2024-01-12", "status": "pending" },
+  { "id": 3, "customer_id": 3, "order_date": "2024-01-20", "status": "cancelled" },
+  { "id": 4, "customer_id": 1, "order_date": "2024-02-02", "status": "paid" }
+]

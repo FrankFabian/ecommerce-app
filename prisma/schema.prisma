@@ -1,0 +1,49 @@
+datasource db {
+  provider = "postgresql"
+  // En local usa DATABASE_URL (de tu .env)
+  // En Vercel puedes mapear DATABASE_URL a POSTGRES_PRISMA_URL (ver paso 6)
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id       Int     @id @default(autoincrement())
+  sku      String  @unique
+  name     String
+  category String
+  price    Decimal @db.Decimal(10,2)
+  stock    Int
+  items    OrderItem[]
+}
+
+model Customer {
+  id         Int      @id @default(autoincrement())
+  fullName   String
+  email      String   @unique
+  district   String
+  createdAt  DateTime @default(now())
+  orders     Order[]
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  customerId Int
+  orderDate  DateTime  @default(now())
+  status     String
+  items      OrderItem[]
+}
+
+model OrderItem {
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  unitPrice Decimal @db.Decimal(10,2)
+  quantity  Int
+
+  @@id([orderId, productId])
+}
