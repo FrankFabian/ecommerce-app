@@ -6,14 +6,19 @@ import path from 'node:path';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-function readJson(name: string) {
+function readJson<T>(name: string): T {
   const p = path.join(process.cwd(), 'public', 'data', name);
-  return JSON.parse(fs.readFileSync(p, 'utf-8'));
+  return JSON.parse(fs.readFileSync(p, 'utf-8')) as T;
 }
+
+type Product = { id: number; sku: string; name: string; category: string; price: number; stock: number };
+type Customer = { id: number; full_name: string; email: string; district: string; created_at?: string };
+type Order = { id: number; customer_id: number; order_date: string; status: 'paid' | 'pending' | 'cancelled' };
+type OrderItem = { order_id: number; product_id: number; unit_price: number; quantity: number };
 
 export async function GET() {
   try {
-    // 1) Crear tablas si no existen
+    // 1) Tablas
     await sql`
       CREATE TABLE IF NOT EXISTS products (
         id         INT PRIMARY KEY,
@@ -51,13 +56,12 @@ export async function GET() {
       );
     `;
 
-    // 2) Leer JSONs
-    const products = readJson('products.json');
-    const customers = readJson('customers.json');
-    const orders = readJson('orders.json');
-    const items = readJson('order_items.json');
+    // 2) Datos (idempotente)
+    const products = readJson<Product[]>('products.json');
+    const customers = readJson<Customer[]>('customers.json');
+    const orders = readJson<Order[]>('orders.json');
+    const items = readJson<OrderItem[]>('order_items.json');
 
-    // 3) Insertar sin borrar datos (ON CONFLICT evita duplicados)
     for (const p of products) {
       await sql`
         INSERT INTO products (id, sku, name, category, price, stock)
@@ -69,7 +73,7 @@ export async function GET() {
     for (const c of customers) {
       await sql`
         INSERT INTO customers (id, full_name, email, district, created_at)
-        VALUES (${c.id}, ${c.full_name}, ${c.email}, ${c.district}, now())
+        VALUES (${c.id}, ${c.full_name}, ${c.email}, ${c.district}, COALESCE(${c.created_at}::timestamptz, now()))
         ON CONFLICT (id) DO NOTHING;
       `;
     }
@@ -91,8 +95,9 @@ export async function GET() {
     }
 
     return NextResponse.json({ ok: true, message: 'Database seeded successfully (idempotent)' });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
     console.error('Seed error:', err);
-    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
