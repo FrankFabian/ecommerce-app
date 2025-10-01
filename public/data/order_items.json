@@ -1,0 +1,7 @@
+[
+  { "order_id": 1, "product_id": 1, "unit_price": 39.90, "quantity": 2 },
+  { "order_id": 1, "product_id": 3, "unit_price": 199.90, "quantity": 1 },
+  { "order_id": 2, "product_id": 2, "unit_price": 129.90, "quantity": 1 },
+  { "order_id": 3, "product_id": 4, "unit_price": 89.90, "quantity": 2 },
+  { "order_id": 4, "product_id": 3, "unit_price": 199.90, "quantity": 1 }
+]
