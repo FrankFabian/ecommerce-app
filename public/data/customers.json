@@ -1,0 +1,5 @@
+[
+  { "id": 1, "full_name": "Luis García", "email": "luis.garcia@mail.com", "district": "Miraflores" },
+  { "id": 2, "full_name": "María Pérez", "email": "maria.perez@mail.com", "district": "San Isidro" },
+  { "id": 3, "full_name": "Carlos Rodríguez", "email": "carlos.rodriguez@mail.com", "district": "Surco" }
+]

@@ -1,0 +1,6 @@
+[
+  { "id": 1, "sku": "SKU-1001", "name": "Camiseta básica", "category": "Ropa", "price": 39.90, "stock": 120 },
+  { "id": 2, "sku": "SKU-1002", "name": "Pantalón chino", "category": "Ropa", "price": 129.90, "stock": 60 },
+  { "id": 3, "sku": "SKU-1003", "name": "Zapatillas urbanas", "category": "Calzado", "price": 199.90, "stock": 35 },
+  { "id": 4, "sku": "SKU-1004", "name": "Mochila minimal", "category": "Accesorios", "price": 89.90, "stock": 80 }
+]
